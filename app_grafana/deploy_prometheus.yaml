@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  labels:
+    app: app-grafana
+    tier: prometheus
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: '15s'
+    scrape_configs:
+      - job_name: 'node_exporter'
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['poshhx01.local:9100']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-svc
+  labels:
+    app: app-grafana
+    tier: prometheus
+spec:
+  ports:
+    - port: 9090
+  selector:
+    app: app-grafana
+    tier: prometheus
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pv-claim
+  labels:
+    app: app-grafana
+    tier: prometheus
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: app-grafana
+    tier: prometheus
+    app.kubernetes.io/part-of: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-grafana
+      tier: prometheus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app-grafana
+        tier: prometheus
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/vt121170prj/prometheus
+        name: prometheus
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /prometheus
+        - name: config-volume
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+      volumes:
+      - name: prometheus-data
+        persistentVolumeClaim:
+          claimName: prometheus-pv-claim
+      - name: config-volume
+        configMap:
+          name: prometheus-config
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: app-grafana
+    tier: prometheus
+  name: prometheus
+spec:
+  tags:
+  - name: latest
+    from:
+      kind: DockerImage
+      name: docker.io/prom/prometheus
+    importPolicy:
+      scheduled: false

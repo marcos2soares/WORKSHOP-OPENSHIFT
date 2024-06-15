@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/part-of: votting
+    app: votting
+    tier: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: votting
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: votting
+        tier: db
+    spec:
+      containers:
+      - image: postgres:15-alpine
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: TZ
+          value: 'Brazil/East'
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-data
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/psql
+            - -U
+            - postgres
+            - -c
+            - 'select 1'
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /usr/local/bin/psql
+            - -U
+            - postgres
+            - -c
+            - 'select 1'
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+      - name: db-data
+        emptyDir: {} 
+      serviceAccount: rodacomoroot
+      serviceAccountName: rodacomoroot
+

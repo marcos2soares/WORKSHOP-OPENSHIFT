@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: nginx-route
+  namespace: vt121170prj
+  labels:
+    app: nginx-prod
+spec:
+  host: nginx-prod.apps.ocplab.vtal.intra
+  to:
+    kind: Service
+    name: nginx-service
+    weight: 100
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

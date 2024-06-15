@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-service
+  namespace: vt121170prj
+  labels:
+    app: nginx-prod
+spec:
+  selector:
+    app: nginx-prod
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 80

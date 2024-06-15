@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: votting
+    tier: work
+    app.kubernetes.io/part-of: votting
+  name: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: votting
+      tier: work
+  template:
+    metadata:
+      labels:
+        app: votting
+        tier: work
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_worker
+        name: worker
