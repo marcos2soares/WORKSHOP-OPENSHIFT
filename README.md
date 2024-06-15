@@ -1,3 +1,0 @@
-# wokshop-openshift
-
-MATERIAAL DE APOIO WORKSHOP OPENSHIFT
