@@ -1,0 +1,2 @@
+# wokshop-openshift
+WORKSHOP-OPENSHIFT
