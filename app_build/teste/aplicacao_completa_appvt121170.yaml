@@ -4,25 +4,26 @@ kind: BuildConfig
 metadata:
   labels:
     app: appvt121170
-  name: appvt121170v1
-  namespace: vt121170prj
+  name: appvt121170-build
 spec:
-  failedBuildsHistoryLimit: 5
-  successfulBuildsHistoryLimit: 5
-  nodeSelector: null
+  source:
+    type: Git
+    git:
+      uri: https://github.com/marcos2soares/WORKSHOP-OPENSHIFT.git
+    contextDir: app_build/app
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+      from:
+        kind: ImageStreamTag
+        name: appvt121170:latest
   output:
     to:
       kind: ImageStreamTag
-      name: appvt121170:1.0
-  postCommit: {}
-  resources: {}
-  runPolicy: Serial
-  source:
-    binary: {}
-    type: Binary
-  strategy:
-    dockerStrategy: {}
-    type: Docker
+      name: appvt121170:latest
+  triggers:
+  - type: ConfigChange
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -42,7 +43,7 @@ spec:
        app: appvt121170
    spec:
      containers:
-       - image: image-registry.openshift-image-registry.svc:5000/vt121170prj/appvt121170:1.0
+       - image: image-registry.openshift-image-registry.svc:5000/vt121170prj/appvt121170
          imagePullPolicy: Always
          name: appvt121170-cont
          ports:
@@ -66,6 +67,13 @@ metadata:
 spec:
   lookupPolicy:
     local: false
+  tags:
+  - name: latest
+    from:
+      kind: DockerImage
+      name: registry.redhat.io/ubi8/python-36
+    referencePolicy:
+      type: Source
 ---
 apiVersion: route.openshift.io/v1
 kind: Route

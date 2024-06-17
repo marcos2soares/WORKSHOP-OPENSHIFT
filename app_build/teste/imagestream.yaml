@@ -8,3 +8,12 @@ metadata:
 spec:
   lookupPolicy:
     local: false
+  tags:
+  - name: latest
+    from:
+      kind: DockerImage
+      name: registry.redhat.io/ubi8/python-36
+    referencePolicy:
+      type: Source
+
+
