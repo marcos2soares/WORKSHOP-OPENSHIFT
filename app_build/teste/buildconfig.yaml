@@ -1,0 +1,71 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170-build
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/marcos2soares/WORKSHOP-OPENSHIFT.git
+    contextDir: app
+  strategy:
+    type: Docker                      
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+      from:
+        kind: ImageStreamTag       # Use an imagestream tag as 'FROM'
+        namespace: toms-project    # Which project?
+        name: httpd:latest         # Use the imagestream created above
+  output:
+    to:
+      kind: ImageStreamTag
+      name: mywebsite:latest
+
+
+  output:
+    to:
+      kind: ImageStreamTag
+      name: appvt121170:1.0
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    dockerStrategy: {}
+    type: Docker
+
+imagestream.image.openshift.io/appvt121170   default-route-openshift-image-registry.apps.ocplab.vtal.intra/vt121170prj/appvt121170   1.0    6 days ago
+
+piVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: mywebsite
+  labels:
+    app: mywebsite
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/monodot/container-up
+    contextDir: httpd-hello-world
+  strategy:
+    type: Docker                      
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+      from:
+        kind: ImageStreamTag       # Use an imagestream tag as 'FROM'
+        namespace: toms-project    # Which project?
+        name: httpd:latest         # Use the imagestream created above
+  output:
+    to:
+      kind: ImageStreamTag
+      name: mywebsite:latest
+  triggers:
+  - type: ImageChange   
+
+
+
