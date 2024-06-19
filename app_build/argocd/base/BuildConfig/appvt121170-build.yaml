@@ -1,0 +1,23 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170-build
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/marcos2soares/WORKSHOP-OPENSHIFT.git
+    contextDir: app_build/app
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: appvt121170:latest
+  triggers:
+    - type: ConfigChange

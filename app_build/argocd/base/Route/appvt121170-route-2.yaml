@@ -1,0 +1,21 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/balance: 'random'
+    haproxy.router.openshift.io/disable_cookies: 'true'
+  labels:
+    app: appvt121170
+  name: appvt121170-route-2
+spec:
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: appvt121170-svc
+    weight: 100
+  port:
+    targetPort: appvt121170-svc-port
+  wildcardPolicy: None

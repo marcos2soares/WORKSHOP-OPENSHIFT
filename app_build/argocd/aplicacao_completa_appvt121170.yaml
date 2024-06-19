@@ -1,0 +1,149 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: appvt121170
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170-build
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/marcos2soares/WORKSHOP-OPENSHIFT.git
+    contextDir: app_build/app
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: appvt121170:latest
+  triggers:
+    - type: ConfigChange
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: appvt121170
+    app.kubernetes.io/part-of: appvt121170
+  name: appvt121170-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appvt121170
+  template:
+    metadata:
+      labels:
+        app: appvt121170
+    spec:
+      containers:
+        - image: default-route-openshift-image-registry.apps.ocplab.vtal.intra/appvt121170/appvt121170:latest
+          name: appvt121170
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1000Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/balance: 'random'
+    haproxy.router.openshift.io/disable_cookies: 'true'
+  labels:
+    app: appvt121170
+  name: appvt121170-route-2
+spec:
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: appvt121170-svc
+    weight: 100
+  port:
+    targetPort: appvt121170-svc-port
+  wildcardPolicy: None
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170-route
+spec:
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: appvt121170-svc
+    weight: 100
+  port:
+    targetPort: appvt121170-svc-port
+  wildcardPolicy: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170-svc
+spec:
+  ports:
+  - name: appvt121170-svc-port
+    port: 5000
+    targetPort: 6000
+  selector:
+    app: appvt121170
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: appvt12117-hpa
+  labels:
+    app: appvt121170
+spec:
+  maxReplicas: 15
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 60
+        type: Utilization
+    type: Resource
+  - resource:
+      name: memory
+      target:
+        averageUtilization: 60
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: appvt121170-deploy

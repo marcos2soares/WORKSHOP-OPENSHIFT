@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: appvt121170
+    app.kubernetes.io/part-of: appvt121170
+  name: appvt121170-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appvt121170
+  template:
+    metadata:
+      labels:
+        app: appvt121170
+    spec:
+      containers:
+        - image: default-route-openshift-image-registry.apps.ocplab.vtal.intra/appvt121170/appvt121170:latest
+          name: appvt121170
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1000Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi

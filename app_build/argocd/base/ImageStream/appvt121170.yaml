@@ -1,0 +1,10 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: appvt121170
+  name: appvt121170
+spec:
+  lookupPolicy:
+    local: true
