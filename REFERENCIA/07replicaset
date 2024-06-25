@@ -1,0 +1,6 @@
+
+oc run nginx-001  --image=nginxinc/nginx-unprivileged
+oc run nginx-002  --image=nginxinc/nginx-unprivileged
+oc get pods
+
+oc delete pod nginx-001

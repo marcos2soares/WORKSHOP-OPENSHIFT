@@ -1,0 +1,2 @@
+
+oc run nginx  --image=nginxinc/nginx-unprivileged 
