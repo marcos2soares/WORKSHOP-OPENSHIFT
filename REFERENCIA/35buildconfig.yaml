@@ -1,3 +1,14 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: appteste
+  name: appteste
+spec:
+  lookupPolicy:
+    local: true
+---
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
@@ -9,7 +20,7 @@ spec:
     type: Git
     git:
       uri: https://github.com/marcos2soares/WORKSHOP-OPENSHIFT.git
-    contextDir: REFERENCIA/app_source
+    contextDir: REFERENCIA/app-source
   strategy:
     type: Docker                      
     dockerStrategy:
@@ -20,4 +31,3 @@ spec:
       name: appteste:latest
   triggers:
   - type: ConfigChange
-

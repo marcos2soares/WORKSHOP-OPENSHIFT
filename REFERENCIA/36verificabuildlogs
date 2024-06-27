@@ -1,0 +1,2 @@
+
+ oc logs pod/appteste-build-1-build
