@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: vt121170prj
+spec:
+  containers:
+  - image: default-route-openshift-image-registry.apps.ocplab.vtal.intra/vt121170prj/nginx-is
+    imagePullPolicy: Always
+    name: nginx-cont
+    ports:
+    - containerPort: 8080
+      protocol: TCP

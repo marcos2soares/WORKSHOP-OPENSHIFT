@@ -1,0 +1,3 @@
+oc scale  deployment.apps/nginx  --replicas=8
+ou
+oc scale  deploy nginx  --replicas=8

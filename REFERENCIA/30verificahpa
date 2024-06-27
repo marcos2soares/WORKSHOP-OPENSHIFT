@@ -1,0 +1,8 @@
+oc describe pod | grep -i Limits: -A 5
+oc get hpa -w
+while true ; do  oc adm  top pod ; sleep 10 ;done
+while true ; do  oc get   pod ; sleep 10 ;done
+# stress dentro do pod
+
+oc rsh  pod/nginx-865c7b79b8-wc6dq bash
+dd if=/dev/zero of=/dev/null
