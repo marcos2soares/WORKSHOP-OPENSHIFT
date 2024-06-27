@@ -1,0 +1,2 @@
+oc port-forward --address 10.101.237.253   service/nginx-service   3000:5000
+

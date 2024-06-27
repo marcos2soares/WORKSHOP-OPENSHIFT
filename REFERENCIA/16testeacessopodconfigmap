@@ -1,0 +1,4 @@
+oc get pods
+oc rsh nginx  curl http://localhost:8080
+oc port-forward --address 10.101.237.253   pod/nginx   3000:8080
+

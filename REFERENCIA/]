@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exemplo-pod
+spec:
+  volumes:
+    - name: exemplo-volume
+      emptyDir: {}
+  containers:
+    - name: container-um
+      image: nginxinc/nginx-unprivileged
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: exemplo-volume
+    - name: container-dois
+      image: busybox
+      volumeMounts:
+        - mountPath: /mnt
+          name: exemplo-volume
+      command: [ "sh", "-c", "echo 'Olá do container dois' > /mnt/index.html && sleep 30" ]

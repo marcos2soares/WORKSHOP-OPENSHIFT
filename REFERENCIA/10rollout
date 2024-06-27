@@ -1,2 +1,8 @@
 
-oc rollout restart 
+
+oc get all 
+
+oc rollout restart deployment.apps/nginx
+
+
+oc get all
