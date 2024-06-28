@@ -4,7 +4,6 @@ metadata:
   labels:
     app: nginx
   name: nginx
-  namespace: vt121170prj
 spec:
   containers:
   - image: nginxinc/nginx-unprivileged
