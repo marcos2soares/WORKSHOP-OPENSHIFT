@@ -1,0 +1,16 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: nginx-app
+  name: nginx-app
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+  - name: latest
+    from:
+      kind: DockerImage
+      name: docker.io/nginx:latest
+    importPolicy:
+      scheduled: false
