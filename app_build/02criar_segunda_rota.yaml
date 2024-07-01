@@ -1,4 +1,3 @@
----
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -6,16 +5,16 @@ metadata:
     haproxy.router.openshift.io/balance: 'random'
     haproxy.router.openshift.io/disable_cookies: 'true'
   labels:
-    app: appvt121170
-  name: appvt121170-route-2
+    app: phyton-app
+  name: phyton-app-route2
 spec:
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
   to:
     kind: Service
-    name: appvt121170-svc
+    name: phyton-app-svc
     weight: 100
   port:
-    targetPort: appvt121170-svc-port
+    targetPort: phyton-app-svc-port
   wildcardPolicy: None
