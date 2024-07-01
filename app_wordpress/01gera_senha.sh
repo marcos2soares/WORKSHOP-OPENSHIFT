@@ -47,11 +47,10 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mysql-pass
-  namespace: vt121170prj
 type: Opaque
 data:
   mysql-database: '$MYSQL_DATABASE_BASE64'
   mysql-user: '$MYSQL_USER_BASE64'
   mysql-password: '$MYSQL_PASSWORD_BASE64'
   mysql-random-root-password: '$MYSQL_RANDOM_ROOT_PASSWORD_BASE64'
-" | tee  secret.yaml
+" | tee  02criar_secret.yaml

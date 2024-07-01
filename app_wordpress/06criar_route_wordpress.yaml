@@ -2,11 +2,10 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: wordpress-route
-  namespace: vt121170prj
   labels:
     app: wordpress
 spec:
-  host: wordpress-vt121170prj.apps.ocplab.vtal.intra
+  host: 
   port:
     targetPort: wordpress-service
   to:

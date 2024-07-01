@@ -4,26 +4,12 @@ metadata:
   name: wordpress-mysql
   labels:
     app: wordpress
-  namespace: vt121170prj
 spec:
   ports:
     - port: 3306
   selector:
     app: wordpress
     tier: mysql
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pv-claim
-  labels:
-    app: wordpress
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
