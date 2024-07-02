@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
+  labels:
+    app: votting
+    tier: result
+    app.kubernetes.io/part-of: votting
+  name: result
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: votting
+      tier: result
+  template:
+    metadata:
+      labels:
+        app: votting
+        tier: result
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_result
+        name: result
+        ports:
+        - containerPort: 80
+      serviceAccount: rodacomoroot
+      serviceAccountName: rodacomoroot
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: result-route
+  labels:
+    app: votting
+    tier: result
+spec:
+  host: 
+  port:
+    targetPort: result-service
+  to:
+    kind: Service
+    name: result
+    weight: 100
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: votting
+    tier: result
+  name: result
+spec:
+  ports:
+  - name: "result-service"
+    port: 80
+    targetPort: 80
+  selector:
+    app: votting
+    tier: result

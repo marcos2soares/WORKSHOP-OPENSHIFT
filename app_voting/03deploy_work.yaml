@@ -1,27 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
   labels:
     app: votting
-    tier: result
+    tier: work
     app.kubernetes.io/part-of: votting
-  name: result
+  name: worker
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: votting
-      tier: result
+      tier: work
   template:
     metadata:
       labels:
         app: votting
-        tier: result
+        tier: work
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_result
-        name: result
-        ports:
-        - containerPort: 80
-      serviceAccount: rodacomoroot
-      serviceAccountName: rodacomoroot
+      - image: dockersamples/examplevotingapp_worker
+        name: worker

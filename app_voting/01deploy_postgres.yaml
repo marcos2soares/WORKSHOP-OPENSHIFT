@@ -65,4 +65,19 @@ spec:
         emptyDir: {} 
       serviceAccount: rodacomoroot
       serviceAccountName: rodacomoroot
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: votting
+    tier: db
+  name: db
+spec:
+  ports:
+  - name: "db-service"
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: votting
+    tier: db
